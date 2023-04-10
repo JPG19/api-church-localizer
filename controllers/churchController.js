@@ -13,6 +13,8 @@ async function getChurches(req, res) {
     // res.writeHead(200, { 'Content-Type': 'application/json' })
     // res.end(JSON.stringify(products))
 
+    console.log('loggea process env', process.env);
+
     AWS.config.update({
       region: process.env.DEFAULT_REGION,
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
