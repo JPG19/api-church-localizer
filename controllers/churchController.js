@@ -1,11 +1,6 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ScanCommand } from '@aws-sdk/lib-dynamodb';
 
-import dotenv from 'dotenv';
-
-// Load env vars
-dotenv.config({ path: '../../config/config.env' });
-
 const params = {
   TableName: 'Churches',
 };
@@ -14,9 +9,6 @@ const params = {
 // @route   GET /api/products
 async function getChurches(req, res) {
   try {
-
-    console.log('process.env.AWS_DEFAULT_REGION jpg', process.env.AWS_DEFAULT_REGION)
-
     const credentials = {
       region: process.env.AWS_DEFAULT_REGION,
       credentials: {
