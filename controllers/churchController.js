@@ -10,7 +10,7 @@ const params = {
 async function getChurches(req, res) {
   try {
     const credentials = {
-      region: process.env.DEFAULT_REGION,
+      region: process.env.AWS_DEFAULT_REGION,
       credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -34,7 +34,7 @@ async function getChurches(req, res) {
 async function getChurch(req, res, id) {
   try {
     const credentials = {
-      region: process.env.DEFAULT_REGION,
+      region: process.env.AWS_DEFAULT_REGION,
       credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
