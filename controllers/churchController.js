@@ -1,7 +1,6 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ScanCommand } from '@aws-sdk/lib-dynamodb';
 
-const ddbClient = new DynamoDBClient({ region: 'sa-east-1' });
 const params = {
   TableName: 'Churches',
 };
@@ -10,6 +9,16 @@ const params = {
 // @route   GET /api/products
 async function getChurches(req, res) {
   try {
+    const credentials = {
+      region: process.env.DEFAULT_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    };
+
+    const ddbClient = new DynamoDBClient(credentials);
+
     const data = await ddbClient.send(new ScanCommand(params));
     const { Items } = data;
 
@@ -24,6 +33,16 @@ async function getChurches(req, res) {
 // @route   GET /api/product/:id
 async function getChurch(req, res, id) {
   try {
+    const credentials = {
+      region: process.env.DEFAULT_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    };
+
+    const ddbClient = new DynamoDBClient(credentials);
+
     const data = await ddbClient.send(new ScanCommand(params));
     const { Items } = data;
     const foundItem = Items?.find((Item) => Item.ChurchId === id);
