@@ -9,6 +9,11 @@ const params = {
 // @route   GET /api/products
 async function getChurches(req, res) {
   try {
+
+    console.log('process.env.AWS_DEFAULT_REGION jpg', process.env.AWS_DEFAULT_REGION)
+    console.log('process.env.AWS_ACCESS_KEY_ID jpg', process.env.AWS_ACCESS_KEY_ID)
+    console.log('process.env.AWS_SECRET_ACCESS_KEY jpg', process.env.AWS_SECRET_ACCESS_KEY)
+
     const credentials = {
       region: process.env.AWS_DEFAULT_REGION,
       credentials: {
