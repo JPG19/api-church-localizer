@@ -28,8 +28,8 @@ async function getChurches(req, res) {
     docClient.scan(params, (err, data) => {
       if (err) {
         console.log('Error', err);
-        res.status(400).json(err);
-        resolve();
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(err));
       }
 
       const { Items } = data;
@@ -71,8 +71,8 @@ async function getChurch(req, res, id) {
     docClient.scan(params, (err, data) => {
       if (err) {
         console.log('Error', err);
-        res.status(400).json(err);
-        resolve();
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(err));
       }
 
       const { Items } = data;
