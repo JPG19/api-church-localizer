@@ -1,44 +1,20 @@
-// const Church = require('../models/churchModel')
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { ScanCommand } from '@aws-sdk/lib-dynamodb';
 
-// const { getPostData } = require('../utils')
-
-const AWS = require('aws-sdk');
+const ddbClient = new DynamoDBClient({ region: 'sa-east-1' });
+const params = {
+  TableName: 'Churches',
+};
 
 // @desc    Gets All Products
 // @route   GET /api/products
 async function getChurches(req, res) {
   try {
-    // const churches = await Product.findAll()
+    const data = await ddbClient.send(new ScanCommand(params));
+    const { Items } = data;
 
-    // res.writeHead(200, { 'Content-Type': 'application/json' })
-    // res.end(JSON.stringify(products))
-
-    console.log('loggea process env', process.env);
-
-    AWS.config.update({
-      region: process.env.DEFAULT_REGION,
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    });
-
-    const docClient = new AWS.DynamoDB.DocumentClient();
-
-    const params = {
-      TableName: 'Churches',
-    };
-
-    docClient.scan(params, (err, data) => {
-      if (err) {
-        console.log('Error', err);
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(err));
-      }
-
-      const { Items } = data;
-
-      res.writeHead(200, { 'Content-Type': 'application/json' })
-      res.end(JSON.stringify(Items));
-    });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(Items));
   } catch (error) {
     console.log(error);
   }
@@ -48,47 +24,20 @@ async function getChurches(req, res) {
 // @route   GET /api/product/:id
 async function getChurch(req, res, id) {
   try {
-    // const product = await Product.findById(id);
+    const data = await ddbClient.send(new ScanCommand(params));
+    const { Items } = data;
+    const foundItem = Items?.find((Item) => Item.ChurchId === id);
 
-    // if (!product) {
-    //   res.writeHead(404, { 'Content-Type': 'application/json' });
-    //   res.end(JSON.stringify({ message: 'Product Not Found' }));
-    // } else {
-    //   res.writeHead(200, { 'Content-Type': 'application/json' });
-    //   res.end(JSON.stringify(product));
-    // }
+    if (!foundItem) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'Product Not Found' }));
+    }
 
-    AWS.config.update({
-      region: process.env.DEFAULT_REGION,
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    });
-
-    const docClient = new AWS.DynamoDB.DocumentClient();
-
-    const params = {
-      TableName: 'Churches',
-    };
-
-    docClient.scan(params, (err, data) => {
-      if (err) {
-        console.log('Error', err);
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(err));
-      }
-
-      const { Items } = data;
-      const foundItem = Items?.find((Item) => Item.ChurchId === id);
-
-      res.writeHead(200, { 'Content-Type': 'application/json' })
-      res.end(JSON.stringify(foundItem));
-    });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(foundItem));
   } catch (error) {
     console.log(error);
   }
 }
 
-module.exports = {
-  getChurches,
-  getChurch,
-};
+export { getChurches, getChurch };

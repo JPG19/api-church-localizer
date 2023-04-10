@@ -1,10 +1,10 @@
-const http = require('http');
-const dotenv = require('dotenv');
+import http from 'http';
+import dotenv from 'dotenv';
+
+import { getChurches, getChurch } from './controllers/churchController.js';
 
 // Load env vars
 dotenv.config({ path: './config/config.env' });
-
-const { getChurches, getChurch } = require('./controllers/churchController');
 
 const server = http.createServer((req, res) => {
   if (req.url === '/api/churches' && req.method === 'GET') {
@@ -19,4 +19,4 @@ const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-module.exports = server;
+export default server;
