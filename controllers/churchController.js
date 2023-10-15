@@ -107,4 +107,52 @@ async function updateChurch(req, res) {
   }
 }
 
-export { getChurches, getChurch, updateChurch };
+// @desc    Adds Church
+// @route   POST /api/churches/add
+async function addChurch(req, res) {
+  try {
+    const credentials = {
+      region: process.env.AWS_DEFAULT_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    };
+    
+    const bodyItem = req.body;
+
+    // make the strings into booleans
+    bodyItem.Baptism = bodyItem.Baptism === "true" ? true : false;
+    bodyItem.Confirmation = bodyItem.Confirmation === "true" ? true : false;
+    bodyItem.Wedding = bodyItem.Wedding === "true" ? true : false;
+    bodyItem.FirstCommunion = bodyItem.FirstCommunion === "true" ? true : false;
+    bodyItem.Images = bodyItem.Images.split(',');
+    bodyItem.Priests = bodyItem.Priests.split(',');
+
+
+    const ddbClient = new DynamoDBClient(credentials);
+
+    const data = await ddbClient.send(new ScanCommand(params));
+    const { Items } = data;
+    const foundItem = Items?.find((Item) => Item.ChurchId === bodyItem.ChurchId);
+
+    if (foundItem) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'ChurchId already exists' }));
+    }
+
+    await ddbClient.send(
+      new PutCommand({
+        TableName: params.TableName,
+        Item: bodyItem
+      }),
+    );
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true }));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { getChurches, getChurch, updateChurch, addChurch };
