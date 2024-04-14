@@ -126,8 +126,8 @@ async function addChurch(req, res) {
     bodyItem.Confirmation = bodyItem.Confirmation === "true" ? true : false;
     bodyItem.Wedding = bodyItem.Wedding === "true" ? true : false;
     bodyItem.FirstCommunion = bodyItem.FirstCommunion === "true" ? true : false;
-    bodyItem.Images = bodyItem.Images.split(',');
-    bodyItem.Priests = bodyItem.Priests.split(',');
+    bodyItem.Images = bodyItem.Images?.split(',');
+    bodyItem.Priests = bodyItem.Priests?.split(',');
 
 
     const ddbClient = new DynamoDBClient(credentials);
